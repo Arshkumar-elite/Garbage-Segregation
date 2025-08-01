@@ -43,7 +43,14 @@ const wasteTypeMapping = {
   'tv': 'non-biodegradable', 'remote': 'non-biodegradable', 'microwave': 'non-biodegradable',
   'toaster': 'non-biodegradable', 'refrigerator': 'non-biodegradable', 'book': 'biodegradable',
   'clock': 'non-biodegradable', 'vase': 'non-biodegradable', 'teddy bear': 'non-biodegradable',
-  'hair drier': 'non-biodegradable', 'toothbrush': 'non-biodegradable'
+  'hair drier': 'non-biodegradable', 'toothbrush': 'non-biodegradable',"chips packet": "non-biodegradable", 
+  "face mask": "non-biodegradable","plastic straw": "non-biodegradable","tin can": "non-biodegradable","aluminum foil": "non-biodegradable",
+  "shampoo bottle": "non-biodegradable","detergent bottle": "non-biodegradable","plastic toy": "non-biodegradable",
+  "cd": "non-biodegradable","battery": "non-biodegradable","egg shell": "biodegradable",
+  "tea bag": "biodegradable","coffee grounds": "biodegradable","vegetable peel": "biodegradable","fruit peel": "biodegradable",
+  "bread": "biodegradable", "tissue paper": "biodegradable","flowers": "biodegradable","leaf": "biodegradable",
+"paper": "biodegradable"
+
 };
 
 async function analyzeImage(imagePath) {
@@ -84,7 +91,7 @@ async function annotateImageCanvas(imagePath, annotations) {
   const ctx = canvas.getContext('2d');
 
   ctx.drawImage(image, 0, 0);
-  ctx.font = '24px OpenSans';
+  ctx.font = '20px OpenSans';
 
   annotations.forEach(ann => {
     const [xPct, yPct, wPct, hPct] = ann.box;
@@ -94,7 +101,7 @@ async function annotateImageCanvas(imagePath, annotations) {
     const h = (hPct / 100) * image.height;
 
     ctx.strokeStyle = ann.type === 'biodegradable' ? 'green' : 'red';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 5;
     ctx.strokeRect(x, y, w, h);
 
     const label = `${ann.name} (${ann.type}) ${(ann.confidence * 100).toFixed(1)}%`;
