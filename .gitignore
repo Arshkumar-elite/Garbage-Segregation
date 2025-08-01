@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Uploaded images and annotated output
+uploads/
+*.jpg
+*.jpeg
+*.png
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Optional: VSCode settings
+.vscode/
+
+# Optional: npm debug files
+npm-debug.log*
+
+# Optional: coverage reports (if using tests)
+coverage/
