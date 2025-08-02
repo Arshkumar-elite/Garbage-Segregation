@@ -11,6 +11,11 @@ const { createCanvas, loadImage, registerFont } = require('canvas');
 registerFont(path.resolve(__dirname, 'fonts/OpenSans-Bold.ttf'), { family: 'OpenSans' });
 
 const app = express();
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"/views"));
+app.get("/",(req,res)=>{
+  res.render("home.ejs");
+})
 
 // Configure upload directory
 const uploadDir = path.resolve(__dirname, 'uploads');
@@ -127,6 +132,7 @@ async function annotateImageCanvas(imagePath, annotations) {
 function cleanFiles(...paths) {
   paths.forEach(p => fs.existsSync(p) && fs.unlinkSync(p));
 }
+app.use('/uploads', express.static(uploadDir));
 
 app.post('/upload', (req, res) => {
   upload.single('image')(req, res, async (err) => {
@@ -138,19 +144,25 @@ app.post('/upload', (req, res) => {
       const annotations = await analyzeImage(originalPath);
       if (!annotations.length) {
         cleanFiles(originalPath);
-        return res.status(200).json({ message: 'No objects found', detections: [] });
+        return res.status(200).send('<h2>No objects found</h2>');
       }
+
       const annotatedPath = await annotateImageCanvas(originalPath, annotations);
-      res.download(annotatedPath, `annotated_${req.file.originalname}`, err => {
-        cleanFiles(originalPath, annotatedPath);
-        if (err) console.error('Download error:', err);
+      const annotatedFilename = path.basename(annotatedPath);
+
+      // Don't delete immediately so browser can fetch it
+      res.render('result.ejs', {
+        imageUrl: `/uploads/${annotatedFilename}`,
+        detections: annotations
       });
+
     } catch (error) {
       cleanFiles(originalPath);
       res.status(500).json({ error: error.message });
     }
   });
 });
+
 
 app.post('/analyze', (req, res) => {
   upload.single('image')(req, res, async (err) => {
