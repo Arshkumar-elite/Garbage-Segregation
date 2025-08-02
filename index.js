@@ -33,7 +33,7 @@ const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const HF_API_URL = "https://api-inference.huggingface.co/models/facebook/detr-resnet-50";
+const HF_API_URL = "https://api-inference.huggingface.co/models/facebook/detr-resnet-101";
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 
 const wasteTypeMapping = {
@@ -67,7 +67,7 @@ async function analyzeImage(imagePath) {
     },
     timeout: 30000
   });
-
+  console.log("got the response??")
   if (response.data.error && response.data.error.includes('loading')) {
     await new Promise(r => setTimeout(r, 20000));
     return analyzeImage(imagePath);
@@ -135,13 +135,15 @@ function cleanFiles(...paths) {
 app.use('/uploads', express.static(uploadDir));
 
 app.post('/upload', (req, res) => {
+    console.log("yaha hu")
   upload.single('image')(req, res, async (err) => {
     if (err) return res.status(400).json({ error: err.message });
     const originalPath = req.file?.path;
     if (!originalPath) return res.status(400).json({ error: 'No file uploaded' });
-
+    
+    console.log(originalPath)
     try {
-      const annotations = await analyzeImage(originalPath);
+    const annotations = await analyzeImage(originalPath);
       if (!annotations.length) {
         cleanFiles(originalPath);
         return res.status(200).send('<h2>No objects found</h2>');
