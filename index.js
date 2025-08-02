@@ -7,6 +7,7 @@ const path = require('path');
 const axios = require('axios');
 const { createCanvas, loadImage, registerFont } = require('canvas');
 
+
 // Register font (you must place a .ttf font in fonts/ folder)
 registerFont(path.resolve(__dirname, 'fonts/OpenSans-Bold.ttf'), { family: 'OpenSans' });
 
@@ -16,6 +17,8 @@ app.set("views",path.join(__dirname,"/views"));
 app.get("/",(req,res)=>{
   res.render("home.ejs");
 })
+// Access Assets 
+app.use(express.static('assets'));
 
 // Configure upload directory
 const uploadDir = path.resolve(__dirname, 'uploads');

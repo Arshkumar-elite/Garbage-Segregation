@@ -1,15 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecoverse</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoVerse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
-<body>
-    <h1>EcoVerse</h1>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required />
-        <button type="submit">Analyze</button>
-    </form>
+
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- 🌍 Hero Section -->
+    <section class="pt-6 pb-10 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+
+            <!-- Left content -->
+            <div class="space-y-5">
+                <div
+                    class="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full shadow-sm w-fit mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    AI-Powered Waste Sorting
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">
+                    EcoVerse <br />
+                    <span class="text-green-600">Sort Your Trash</span><br />
+                    <span class="text-green-600">Intelligently</span>
+                </h1>
+
+                <p class="text-gray-600 text-lg max-w-md">
+                    Upload an image of your waste and our AI will instantly identify which items are biodegradable and
+                    which need special disposal. Make recycling easier and more accurate.
+                </p>
+
+                <!-- Scroll Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                    <a href="#upload-section"
+                        class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-3 rounded-lg shadow transform transition-transform duration-200 hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 7h4l3 5 4-8 5 13h3" />
+                        </svg>
+                        Start Sorting
+                    </a>
+                    <a href="#how-it-works"
+                        class="inline-flex items-center justify-center bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 font-semibold px-5 py-3 rounded-lg transform transition-transform duration-200 hover:scale-105">
+
+                        Learn More
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right image -->
+            <div class="flex justify-center">
+                <img src="/hero-waste-sorting.jpg" alt="Error"
+                    class="rounded-xl shadow-lg w-full max-w-xl md:max-w-2xl h-auto" />
+            </div>
+
+    </section>
+
+    <!-- 📘 How It Works -->
+    <section id="how-it-works" class="py-10">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-2">How It Works</h2>
+            <p class="text-gray-600 mb-8">Our advanced AI technology makes waste sorting simple and accurate</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Upload Image Card -->
+                <div class="bg-white p-6 rounded-lg shadow text-center hover:shadow-2xl transition duration-300">
+                    <div class="mb-3">
+                        <div
+                            class="bg-green-100 text-green-700 w-12 h-12 flex items-center justify-center rounded-full mx-auto shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                            </svg>
+
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-lg">Upload Image</h3>
+                    <p class="text-gray-600 text-sm">Take a photo or upload an image of your waste items</p>
+                </div>
+
+                <!-- AI Analysis Card -->
+                <div class="bg-white p-6 rounded-lg shadow text-center hover:shadow-2xl transition duration-300">
+                    <div class="mb-3">
+                        <div
+                            class="bg-green-100 text-green-700 w-12 h-12 flex items-center justify-center rounded-full mx-auto shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                            </svg>
+
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-lg">AI Analysis</h3>
+                    <p class="text-gray-600 text-sm">Our AI identifies and classifies each item in your image</p>
+                </div>
+
+                <!-- Get Results Card -->
+                <div class="bg-white p-6 rounded-lg shadow text-center hover:shadow-2xl transition duration-300">
+                    <div class="mb-3">
+                        <div
+                            class="bg-green-100 text-green-700 w-12 h-12 flex items-center justify-center rounded-full mx-auto shadow-sm">
+                            <svg class="w-[25px] h-[25px] fill-[#1cb526]" viewBox="0 0 512 512"
+                                xmlns="http://www.w3.org/2000/svg">
+
+                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                <path
+                                    d="M174.7 45.1C192.2 17 223 0 256 0s63.8 17 81.3 45.1l38.6 61.7 27-15.6c8.4-4.9 18.9-4.2 26.6 1.7s11.1 15.9 8.6 25.3l-23.4 87.4c-3.4 12.8-16.6 20.4-29.4 17l-87.4-23.4c-9.4-2.5-16.3-10.4-17.6-20s3.4-19.1 11.8-23.9l28.4-16.4L283 79c-5.8-9.3-16-15-27-15s-21.2 5.7-27 15l-17.5 28c-9.2 14.8-28.6 19.5-43.6 10.5c-15.3-9.2-20.2-29.2-10.7-44.4l17.5-28zM429.5 251.9c15-9 34.4-4.3 43.6 10.5l24.4 39.1c9.4 15.1 14.4 32.4 14.6 50.2c.3 53.1-42.7 96.4-95.8 96.4L320 448v32c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-64-64c-9.4-9.4-9.4-24.6 0-33.9l64-64c6.9-6.9 17.2-8.9 26.2-5.2s14.8 12.5 14.8 22.2v32l96.2 0c17.6 0 31.9-14.4 31.8-32c0-5.9-1.7-11.7-4.8-16.7l-24.4-39.1c-9.5-15.2-4.7-35.2 10.7-44.4zm-364.6-31L36 204.2c-8.4-4.9-13.1-14.3-11.8-23.9s8.2-17.5 17.6-20l87.4-23.4c12.8-3.4 26 4.2 29.4 17L182 241.2c2.5 9.4-.9 19.3-8.6 25.3s-18.2 6.6-26.6 1.7l-26.5-15.3L68.8 335.3c-3.1 5-4.8 10.8-4.8 16.7c-.1 17.6 14.2 32 31.8 32l32.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-32.2 0C42.7 448-.3 404.8 0 351.6c.1-17.8 5.1-35.1 14.6-50.2l50.3-80.5z">
+                                </path>
+
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-lg">Get Results</h3>
+                    <p class="text-gray-600 text-sm">See which items are biodegradable and which need special disposal
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 📤 Upload Section -->
+    <section id="upload-section" class="py-20">
+        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+            <h3 class="text-xl font-semibold text-green-700 mb-6 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                </svg>
+                Upload Waste Image
+            </h3>
+
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <label for="fileInput"
+                    class="block border-2 border-dashed border-green-400 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 hover:bg-green-50">
+                    <input type="file" name="image" accept="image/*" required class="hidden" id="fileInput"
+                        onchange="this.form.submit()" />
+
+                    <div class="flex flex-col items-center text-green-600 hover:text-green-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-8 h-8 mb-2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                        </svg>
+
+                        <p class="font-semibold text-lg">Drop your waste image here</p>
+                        <p class="text-sm text-gray-500">or click to browse files</p>
+                    </div>
+                </label>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- 💡 Why Use EcoVerse-->
+    <section class="py-10 bg-green-50">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-10">Why Use EcoVerse?</h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+                <div class="flex flex-col items-center">
+                    <div class="bg-lime-600 text-white w-12 h-12 flex items-center justify-center rounded-full mb-2">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d='M5.973 18.028c7.625 4.576 13.726-1.525 12.963-12.964C7.498 4.302 1.398 10.403 5.973 18.028m0 0L4 20m1.973-1.972L10.1 13.9' />
+                        </svg>
+                    </div>
+                    <strong>Eco-Friendly</strong>
+                    <p class="text-gray-600 text-center">Reduce environmental impact through proper waste sorting</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="bg-sky-400 text-white w-12 h-12 flex items-center justify-center rounded-full mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                        </svg>
+
+                    </div>
+                    <strong>Accurate</strong>
+                    <p class="text-gray-600 text-center">AI-powered classification ensures high accuracy</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="bg-yellow-800 text-white w-12 h-12 flex items-center justify-center rounded-full mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                        </svg>
+
+                    </div>
+                    <strong>Easy to Use</strong>
+                    <p class="text-gray-600 text-center">Simply upload an image and get instant results</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="bg-green-600 text-white w-12 h-12 flex items-center justify-center rounded-full mb-2">
+                        <svg class="w-[25px] h-[25px] fill-[#ffffff]" viewBox="0 0 512 512"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M174.7 45.1C192.2 17 223 0 256 0s63.8 17 81.3 45.1l38.6 61.7 27-15.6c8.4-4.9 18.9-4.2 26.6 1.7s11.1 15.9 8.6 25.3l-23.4 87.4c-3.4 12.8-16.6 20.4-29.4 17l-87.4-23.4c-9.4-2.5-16.3-10.4-17.6-20s3.4-19.1 11.8-23.9l28.4-16.4L283 79c-5.8-9.3-16-15-27-15s-21.2 5.7-27 15l-17.5 28c-9.2 14.8-28.6 19.5-43.6 10.5c-15.3-9.2-20.2-29.2-10.7-44.4l17.5-28zM429.5 251.9c15-9 34.4-4.3 43.6 10.5l24.4 39.1c9.4 15.1 14.4 32.4 14.6 50.2c.3 53.1-42.7 96.4-95.8 96.4L320 448v32c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-64-64c-9.4-9.4-9.4-24.6 0-33.9l64-64c6.9-6.9 17.2-8.9 26.2-5.2s14.8 12.5 14.8 22.2v32l96.2 0c17.6 0 31.9-14.4 31.8-32c0-5.9-1.7-11.7-4.8-16.7l-24.4-39.1c-9.5-15.2-4.7-35.2 10.7-44.4zm-364.6-31L36 204.2c-8.4-4.9-13.1-14.3-11.8-23.9s8.2-17.5 17.6-20l87.4-23.4c12.8-3.4 26 4.2 29.4 17L182 241.2c2.5 9.4-.9 19.3-8.6 25.3s-18.2 6.6-26.6 1.7l-26.5-15.3L68.8 335.3c-3.1 5-4.8 10.8-4.8 16.7c-.1 17.6 14.2 32 31.8 32l32.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-32.2 0C42.7 448-.3 404.8 0 351.6c.1-17.8 5.1-35.1 14.6-50.2l50.3-80.5z">
+                            </path>
+
+                        </svg>
+                    </div>
+                    <strong>Educational</strong>
+                    <p class="text-gray-600 text-center">Learn about proper waste disposal methods</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </body>
+
 </html>
