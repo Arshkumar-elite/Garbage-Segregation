@@ -130,7 +130,13 @@ app.use('/uploads', express.static(uploadDir));
 app.post('/upload', (req, res) => {
   console.log("yaha hu")
   upload.single('image')(req, res, async (err) => {
-    if (err) return res.status(400).json({ error: err.message });
+    // Handle Multer errors (e.g., file size > 10 MB)
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'The uploaded file exceeds the 10 MB limit. Please try a smaller file.' });
+      }
+      return res.status(400).json({ error: err.message });
+    }
     const originalPath = req.file?.path;
     if (!originalPath) return res.status(400).json({ error: 'No file uploaded' });
 
@@ -175,6 +181,12 @@ app.post('/upload', (req, res) => {
     } catch (error) {
       console.error('Error in /upload:', error);  // Improved logging
       cleanFiles(originalPath);
+
+      // Handle Supabase-specific file size error (>50 MB)
+      if (error.name === 'StorageApiError' && (error.status === 413 || error.message.includes('too large'))) {
+        return res.status(400).json({ error: 'The uploaded file exceeds the 50 MB limit. Please try a smaller file.' });
+      }
+
       res.status(500).json({ error: error.message });
     }
   });
