@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
 });
 
 
-
 // Configure upload directory
 const uploadDir = path.resolve(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
