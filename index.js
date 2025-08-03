@@ -19,8 +19,8 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(express.static('assets'));
 app.get("/", (req, res) => {
   res.render("home.ejs");
-})
 });
+
 
 
 // Configure upload directory
