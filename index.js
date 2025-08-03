@@ -9,15 +9,18 @@ const { createCanvas, loadImage, registerFont } = require('canvas');
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
+
 // Register font (you must place a .ttf font in fonts/ folder)
 registerFont(path.resolve(__dirname, 'fonts/OpenSans-Bold.ttf'), { family: 'OpenSans' });
 
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
+app.use(express.static('assets'));
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
+
 
 // Configure upload directory
 const uploadDir = path.resolve(__dirname, 'uploads');
