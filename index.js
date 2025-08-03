@@ -21,6 +21,10 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7f46c6c33446b221ffb9623444cf813fa3bffe34
 
 // Configure upload directory
 const uploadDir = path.resolve(__dirname, 'uploads');
