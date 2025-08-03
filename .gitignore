@@ -4,12 +4,6 @@ node_modules/
 # Environment variables
 .env
 
-# Uploaded images and annotated output
-uploads/
-*.jpg
-*.jpeg
-*.png
-
 # OS-specific files
 .DS_Store
 Thumbs.db
