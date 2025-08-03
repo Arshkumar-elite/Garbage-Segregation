@@ -16,5 +16,20 @@
     <% }) %>
   </ul>
   <a href="/">Upload another image</a>
+
+  <script>
+    const imageId = '<%= imageId %>';  // ID passed from server
+    window.addEventListener('beforeunload', async () => {
+      try {
+        await fetch('/delete-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageId })
+        });
+      } catch (error) {
+        console.error('Deletion failed:', error);
+      }
+    });
+  </script>
 </body>
 </html>
