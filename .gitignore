@@ -20,3 +20,4 @@ npm-debug.log*
 
 # Optional: coverage reports (if using tests)
 coverage/
+.vercel
