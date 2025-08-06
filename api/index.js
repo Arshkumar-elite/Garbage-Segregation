@@ -1,47 +1,47 @@
-    // Required modules
-    const express = require('express');
-    const multer = require('multer');
-    const fs = require('fs');
-    const path = require('path');
-    const axios = require('axios');
-    const { createCanvas, loadImage, registerFont } = require('canvas');
-    require('dotenv').config({ path: path.join(__dirname, '../.env') });
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+// Required modules
+const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const axios = require('axios');
+const { createCanvas, loadImage, registerFont } = require('canvas');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 
-    // Register font (you must place a .ttf font in fonts/ folder)
-    registerFont(path.resolve(__dirname, '../fonts/OpenSans-Bold.ttf'), { family: 'OpenSans' });
+// Register font (you must place a .ttf font in fonts/ folder)
+registerFont(path.resolve(__dirname, '../fonts/OpenSans-Bold.ttf'), { family: 'OpenSans' });
 
-    const app = express();
-    app.use(express.static(path.join(__dirname, '../public/assets')));
-    app.set("view engine", "ejs");
-    app.set("views", path.join(__dirname, "../views"));
-    app.get("/", (req, res) => {
+const app = express();
+app.use(express.static(path.join(__dirname, '../public/assets')));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "../views"));
+app.get("/", (req, res) => {
     res.render("home.ejs");
-    });
+});
 
 
-    // Configure upload directory
-    const uploadDir = path.join('/tmp', 'uploads');
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+// Configure upload directory
+const uploadDir = path.join('/tmp', 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-    const storage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadDir),
     filename: (req, file, cb) => {
         const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
         cb(null, file.fieldname + '-' + unique + path.extname(file.originalname));
     }
-    });
-    const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+});
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    const HF_API_URL = "https://api-inference.huggingface.co/models/facebook/detr-resnet-101";
-    const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
+const HF_API_URL = "https://api-inference.huggingface.co/models/facebook/detr-resnet-101";
+const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 
-    const wasteTypeMapping = {
+const wasteTypeMapping = {
     'banana': 'biodegradable', 'apple': 'biodegradable', 'sandwich': 'biodegradable',
     'orange': 'biodegradable', 'broccoli': 'biodegradable', 'carrot': 'biodegradable',
     'pizza': 'biodegradable', 'donut': 'biodegradable', 'cake': 'biodegradable',
@@ -60,14 +60,14 @@
     "tea bag": "biodegradable", "coffee grounds": "biodegradable", "vegetable peel": "biodegradable", "fruit peel": "biodegradable",
     "bread": "biodegradable", "tissue paper": "biodegradable", "flowers": "biodegradable", "leaf": "biodegradable",
     "paper": "biodegradable"
-    };
+};
 
-    async function analyzeImage(imagePath) {
+async function analyzeImage(imagePath) {
     const imageBuffer = fs.readFileSync(imagePath);
     const response = await axios.post(HF_API_URL, imageBuffer, {
         headers: {
-        Authorization: `Bearer ${HF_API_KEY}`,
-        'Content-Type': 'image/jpeg'
+            Authorization: `Bearer ${HF_API_KEY}`,
+            'Content-Type': 'image/jpeg'
         },
         timeout: 30000
     });
@@ -83,18 +83,21 @@
     return response.data.filter(d => d.score > 0.5).map(d => {
         const box = d.box;
         const [xmin, ymin, xmax, ymax] = Array.isArray(box)
-        ? box
-        : [box.xmin, box.ymin, box.xmax, box.ymax];
+            ? box
+            : [box.xmin, box.ymin, box.xmax, box.ymax];
+        const rawType = wasteTypeMapping[d.label.toLowerCase()] || 'non-biodegradable';
+        const type = rawType.charAt(0).toUpperCase() + rawType.slice(1);
+
         return {
-        name: d.label,
-        type: wasteTypeMapping[d.label.toLowerCase()] || 'non-biodegradable',
-        confidence: d.score,
-        box: [xmin / width * 100, ymin / height * 100, (xmax - xmin) / width * 100, (ymax - ymin) / height * 100]
+            name: d.label,
+            type,
+            confidence: d.score,
+            box: [xmin / width * 100, ymin / height * 100, (xmax - xmin) / width * 100, (ymax - ymin) / height * 100]
         };
     });
-    }
+}
 
-    async function annotateImageCanvas(imagePath, annotations) {
+async function annotateImageCanvas(imagePath, annotations) {
     const image = await loadImage(imagePath);
     const canvas = createCanvas(image.width, image.height);
     const ctx = canvas.getContext('2d');
@@ -123,92 +126,122 @@
     });
 
     return canvas.toBuffer('image/jpeg');  // Return buffer for direct upload to Supabase
-    }
+}
 
-    function cleanFiles(...paths) {
+function cleanFiles(...paths) {
     paths.forEach(p => fs.existsSync(p) && fs.unlinkSync(p));
-    }
-    app.use('/uploads', express.static(uploadDir));
+}
+app.use('/uploads', express.static(uploadDir));
 
-    app.post('/upload', (req, res) => {
+app.post('/upload', (req, res) => {
     console.log("yaha hu")
     upload.single('image')(req, res, async (err) => {
         // Handle Multer errors (e.g., file size > 10 MB)
         if (err) {
-        if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ error: 'The uploaded file exceeds the 10 MB limit. Please try a smaller file.' });
-        }
-        return res.status(400).json({ error: err.message });
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'The uploaded file exceeds the 10 MB limit. Please try a smaller file.' });
+            }
+            return res.status(400).json({ error: err.message });
         }
         const originalPath = req.file?.path;
         if (!originalPath) return res.status(400).json({ error: 'No file uploaded' });
 
         console.log(originalPath)
         try {
-        const annotations = await analyzeImage(originalPath);
-        if (!annotations.length) {
-            cleanFiles(originalPath);
-            return res.status(200).send('<h2>No objects found</h2>');
-        }
+            const annotations = await analyzeImage(originalPath);
+            if (!annotations.length) {
+                cleanFiles(originalPath);
+                return res.status(200).send('<h2>No objects found</h2>');
+            }
 
-        const annotatedBuffer = await annotateImageCanvas(originalPath, annotations);
-        const uniqueFilename = `annotated_${Date.now()}.jpg`;
+            const annotatedBuffer = await annotateImageCanvas(originalPath, annotations);
+            const uniqueFilename = `annotated_${Date.now()}.jpg`;
 
-        // Upload to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-            .from('annotated-images')
-            .upload(uniqueFilename, annotatedBuffer, { contentType: 'image/jpeg' });
-        if (uploadError) throw uploadError;
+            // Upload to Supabase Storage
+            const { error: uploadError } = await supabase.storage
+                .from('annotated-images')
+                .upload(uniqueFilename, annotatedBuffer, { contentType: 'image/jpeg' });
+            if (uploadError) throw uploadError;
 
-        // Get public URL (reverted from signed URL)
-        const { data: urlData } = supabase.storage
-            .from('annotated-images')
-            .getPublicUrl(uniqueFilename);
-        const imageUrl = urlData.publicUrl;
+            // Get public URL (reverted from signed URL)
+            const { data: urlData } = supabase.storage
+                .from('annotated-images')
+                .getPublicUrl(uniqueFilename);
+            const imageUrl = urlData.publicUrl;
 
-        // Store metadata in DB
-        const { data: metadata, error: insertError } = await supabase
-            .from('image_metadata')
-            .insert({ filename: uniqueFilename })
-            .select('id')
-            .single();
-        if (insertError) throw insertError;
+            // Store metadata in DB
+            const { data: metadata, error: insertError } = await supabase
+                .from('image_metadata')
+                .insert({ filename: uniqueFilename })
+                .select('id')
+                .single();
+            if (insertError) throw insertError;
 
-        cleanFiles(originalPath);  // Clean local original file
+            cleanFiles(originalPath);  // Clean local original file
 
-        res.render('result.ejs', {
-            imageUrl,
-            detections: annotations,
-            imageId: metadata.id  // For deletion
-        });
+            const biodegradable = annotations.filter(d => d.type === 'Biodegradable');
+            const nonBiodegradable = annotations.filter(d => d.type === 'Non-Biodegradable');
+
+
+            const total = annotations.length;
+
+            // Optional: Time taken
+            const timeTaken = 2.3;
+
+
+            let ecoScore;
+            const bioRatio = biodegradable.length / total;
+            if (bioRatio >= 0.7) ecoScore = 'A';
+            else if (bioRatio >= 0.4) ecoScore = 'B';
+            else ecoScore = 'C';
+
+            const detectedItems = annotations.map(d => ({
+                name: d.name,
+                confidence: d.confidence,
+                type: d.type
+            }));
+
+            res.render('result.ejs', {
+                imageUrl,
+                detections: annotations,
+                imageId: metadata.id,
+                biodegradable,
+                nonBiodegradable,
+                total,
+                ecoScore,
+                timeTaken,
+                detectedItems // ✅ added
+            });
+
+
         } catch (error) {
-        console.error('Error in /upload:', error);  // Improved logging
-        cleanFiles(originalPath);
+            console.error('Error in /upload:', error);  // Improved logging
+            cleanFiles(originalPath);
 
-        // Handle Supabase-specific file size error (>50 MB)
-        if (error.name === 'StorageApiError' && (error.status === 413 || error.message.includes('too large'))) {
-            return res.status(400).json({ error: 'The uploaded file exceeds the 50 MB limit. Please try a smaller file.' });
-        }
+            // Handle Supabase-specific file size error (>50 MB)
+            if (error.name === 'StorageApiError' && (error.status === 413 || error.message.includes('too large'))) {
+                return res.status(400).json({ error: 'The uploaded file exceeds the 50 MB limit. Please try a smaller file.' });
+            }
 
-        res.status(500).json({ error: error.message });
+            res.status(500).json({ error: error.message });
         }
     });
-    });
+});
 
-    app.post('/delete-image', async (req, res) => {
+app.post('/delete-image', async (req, res) => {
     const { imageId } = req.body;
     try {
         const { data: metadata, error: fetchError } = await supabase
-        .from('image_metadata')
-        .select('filename')
-        .eq('id', imageId)
-        .single();
+            .from('image_metadata')
+            .select('filename')
+            .eq('id', imageId)
+            .single();
         if (fetchError || !metadata) throw new Error('Metadata not found');
 
         // Delete from Storage
         const { error: deleteError } = await supabase.storage
-        .from('annotated-images')
-        .remove([metadata.filename]);
+            .from('annotated-images')
+            .remove([metadata.filename]);
         if (deleteError) throw deleteError;
 
         // Delete metadata with error handling
@@ -220,33 +253,33 @@
         console.error('Error in /delete-image:', error);  // Improved logging
         res.status(500).json({ error: error.message });
     }
-    });
+});
 
-    app.post('/analyze', (req, res) => {
+app.post('/analyze', (req, res) => {
     upload.single('image')(req, res, async (err) => {
         if (err) return res.status(400).json({ error: err.message });
         const originalPath = req.file?.path;
         if (!originalPath) return res.status(400).json({ error: 'No file uploaded' });
 
         try {
-        const annotations = await analyzeImage(originalPath);
-        cleanFiles(originalPath);
-        res.json({ detections: annotations });
+            const annotations = await analyzeImage(originalPath);
+            cleanFiles(originalPath);
+            res.json({ detections: annotations });
         } catch (error) {
-        console.error('Error in /analyze:', error);  // Improved logging
-        cleanFiles(originalPath);
-        res.status(500).json({ error: error.message });
+            console.error('Error in /analyze:', error);  // Improved logging
+            cleanFiles(originalPath);
+            res.status(500).json({ error: error.message });
         }
     });
-    });
+});
 
-    app.get('/health', (req, res) => {
+app.get('/health', (req, res) => {
     res.json({ status: 'OK', model: 'facebook/detr-resnet-101', apiKeySet: !!HF_API_KEY });
-    });
+});
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    });
+});
 
-    // module.exports = app
+// module.exports = app

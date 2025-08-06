@@ -1,24 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Result - EcoVerse</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis Results - EcoVerse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <h1>Generated Image</h1>
-  <img src="<%= imageUrl %>" alt="Annotated Result" style="max-width: 100%; height: auto;" />
-  <h2>Detections:</h2>
-  <ul>
-    <% detections.forEach(d => { %>
-      <li>
-        <strong><%= d.name %></strong> - <%= d.type %> (<%= (d.confidence * 100).toFixed(1) %>%)
-      </li>
-    <% }) %>
-  </ul>
-  <a href="/">Upload another image</a>
+<body class="bg-gray-50 text-gray-900">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+
+    
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold">Analysis Results</h1>
+      </div>
+
+      <!-- Generated Image -->
+      <div class="mt-10 text-center bg-white p-4 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Generated Image</h2>
+        <img src="<%= imageUrl %>" alt="Annotated Image" class="mx-auto max-w-full rounded shadow mb-4">
+        <a href="<%= imageUrl %>" download class="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">Download Image</a>
+      </div>
+      <br>
+
+      <!-- Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-sm text-gray-500">Total Items</h3>
+          <p class="text-2xl font-bold"><%= total %></p>
+          <p class="text-sm text-gray-400">detected objects</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-sm text-gray-500">Biodegradable</h3>
+          <p class="text-2xl font-bold text-green-600"><%= biodegradable.length %></p>
+          <p class="text-sm text-gray-400"><%= ((biodegradable.length / total) * 100).toFixed(1) %>% of total</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-sm text-gray-500">Non-Biodegradable</h3>
+          <p class="text-2xl font-bold text-red-600"><%= nonBiodegradable.length %></p>
+          <p class="text-sm text-gray-400"><%= ((nonBiodegradable.length / total) * 100).toFixed(1) %>% of total</p>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-sm text-gray-500">Eco Score</h3>
+          <p class="text-2xl font-bold text-blue-600"><%= ecoScore %></p>
+          <p class="text-sm text-gray-400">environmental rating</p>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Waste Distribution Pie Chart -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">📊 Waste Distribution</h2>
+          <p class="text-sm text-gray-500 mb-4">Breakdown of biodegradable vs non-biodegradable items</p>
+          <canvas id="wasteChart" class="w-full h-64"></canvas>
+        </div>
+
+        <!-- Detection Confidence Bar Chart -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-2">📈 Detection Confidence</h2>
+          <p class="text-sm text-gray-500 mb-4">AI confidence levels for each detected item</p>
+          <canvas id="confidenceChart" class="w-full h-64"></canvas>
+        </div>
+      </div>
+
+      <!-- Detected Items -->
+      <div class="bg-white p-6 rounded-lg shadow mt-6">
+        <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">🧾 Detected Items</h2>
+        <p class="text-sm text-gray-500 mb-4">Detailed breakdown of all identified objects</p>
+
+        <!-- Biodegradable -->
+        <div class="mb-4">
+          <h3 class="text-green-600 font-medium mb-1">✔ Biodegradable (<%= biodegradable.length %>)</h3>
+          <% biodegradable.forEach(item => { %>
+            <div class="flex justify-between items-center bg-green-100 rounded px-3 py-2 mb-1">
+              <span><%= item.name %></span>
+              <span class="font-semibold text-green-700"><%= (item.confidence * 100).toFixed(0) %>%</span>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Non-Biodegradable -->
+        <div>
+          <h3 class="text-red-600 font-medium mb-1">✖ Non-Biodegradable (<%= nonBiodegradable.length %>)</h3>
+          <% nonBiodegradable.forEach(item => { %>
+            <div class="flex justify-between items-center bg-red-100 rounded px-3 py-2 mb-1">
+              <span><%= item.name %></span>
+              <span class="font-semibold text-red-700"><%= (item.confidence * 100).toFixed(0) %>%</span>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Disposal Guidelines + Eco Tips -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <!-- Guidelines -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-3">♻️ Disposal Guidelines</h2>
+          <h3 class="text-green-600 font-medium">Biodegradable Items</h3>
+          <ul class="list-disc pl-5 mb-4 text-sm text-gray-700">
+            <li>Compost bin or backyard composting</li>
+            <li>Municipal organic waste collection</li>
+            <li>Food waste recycling programs</li>
+            <li>Worm composting (vermicomposting)</li>
+          </ul>
+          <h3 class="text-red-600 font-medium">Non-Biodegradable Items</h3>
+          <ul class="list-disc pl-5 text-sm text-gray-700">
+            <li>Clean and place in recycling bin</li>
+            <li>Check local recycling guidelines</li>
+            <li>Take to specialized recycling centers</li>
+            <li>Reduce usage and reuse when possible</li>
+          </ul>
+        </div>
+
+        <!-- Tips -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-3">🌿 Eco-Friendly Tips</h2>
+          <ul class="list-disc pl-5 text-sm text-gray-700">
+            <li>Consider using reusable alternatives</li>
+            <li>Start a home compost for organic materials</li>
+            <li>Check your local recycling rules</li>
+            <li>Reduce single-use items</li>
+          </ul>
+        </div>
+      </div>
+
+    <div class="flex justify-center mt-6 gap-4">
+      <a href="/" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+</svg>
+ Analyze Another Image
+      </a>
+    </div>
+  </div>
 
   <script>
-    const imageId = '<%= imageId %>';  // ID passed from server
+
+    // Waste pie chart
+    const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+    new Chart(wasteCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Biodegradable', 'Non-Biodegradable'],
+        datasets: [{
+          data: [<%= biodegradable.length %>, <%= nonBiodegradable.length %>],
+          backgroundColor: ['#22c55e', '#ef4444'],
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+
+    // Detection confidence bar chart
+    const confidenceCtx = document.getElementById('confidenceChart').getContext('2d');
+    new Chart(confidenceCtx, {
+      type: 'bar',
+      data: {
+        labels: <%- JSON.stringify(detectedItems.map(i => i.name)) %>,
+        datasets: [{
+          label: 'Confidence (%)',
+          data: <%- JSON.stringify(detectedItems.map(i => (i.confidence * 100).toFixed(0))) %>,
+          backgroundColor: '#60a5fa',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const index = context.dataIndex;
+                const type = <%- JSON.stringify(detectedItems.map(i => i.type)) %>[index];
+                return `Confidence: ${context.raw}%\nType: ${type === 'biodegradable' ? '🌱 Biodegradable' : '🧴 Non-Biodegradable'}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+
+    // Delete image on unload
+    const imageId = '<%= imageId %>';
     window.addEventListener('beforeunload', async () => {
       try {
         await fetch('/delete-image', {
@@ -26,8 +200,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ imageId })
         });
-      } catch (error) {
-        console.error('Deletion failed:', error);
+      } catch (err) {
+        console.error('Image deletion failed:', err);
       }
     });
   </script>
