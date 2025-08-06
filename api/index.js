@@ -180,7 +180,7 @@ app.post('/upload', (req, res) => {
             cleanFiles(originalPath);  // Clean local original file
 
             const biodegradable = annotations.filter(d => d.type === 'Biodegradable');
-            const nonBiodegradable = annotations.filter(d => d.type === 'Non-Biodegradable');
+            const nonBiodegradable = annotations.filter(d => d.type === 'Non-biodegradable');
 
 
             const total = annotations.length;
