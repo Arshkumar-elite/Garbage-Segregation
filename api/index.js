@@ -228,46 +228,6 @@ app.post('/upload', (req, res) => {
     });
 });
 
-
-   app.get('/download/:imageId', async (req, res) => {
-    const { imageId } = req.params;
-    try {
-        // Retrieve the filename from your image_metadata table
-        const { data: metadata, error: fetchError } = await supabase
-            .from('image_metadata')
-            .select('filename')
-            .eq('id', imageId)
-            .single();
-
-        if (fetchError || !metadata) {
-            return res.status(404).send('Image not found');
-        }
-        // Download the image from Supabase Storage
-        const { data: fileData, error: downloadError } = await supabase.storage
-            .from('annotated-images')
-            .download([metadata.filename]);
-
-        if (downloadError) {
-            return res.status(500).send('Error downloading image');
-        }
-
-        // Convert Blob to Buffer for Node.js
-        const buffer = Buffer.from(await fileData.arrayBuffer());
-
-        // Force download by setting headers
-        res.setHeader('Content-Type', 'image/jpeg');
-        res.setHeader('Content-Disposition', `attachment; filename="${metadata.filename}"`);
-
-        res.send(buffer);
-    } catch (error) {
-        console.error('Error in /download:', error);
-        res.status(500).send('Server error during download');
-    }
-});
-
-
-
-
 app.post('/delete-image', async (req, res) => {
 
     setTimeout(() => {}, 5000);
@@ -296,28 +256,6 @@ app.post('/delete-image', async (req, res) => {
         console.error('Error in /delete-image:', error);  // Improved logging
         res.status(500).json({ error: error.message });
     }
-});
-
-app.post('/analyze', (req, res) => {
-    upload.single('image')(req, res, async (err) => {
-        if (err) return res.status(400).json({ error: err.message });
-        const originalPath = req.file?.path;
-        if (!originalPath) return res.status(400).json({ error: 'No file uploaded' });
-
-        try {
-            const annotations = await analyzeImage(originalPath);
-            cleanFiles(originalPath);
-            res.json({ detections: annotations });
-        } catch (error) {
-            console.error('Error in /analyze:', error);  // Improved logging
-            cleanFiles(originalPath);
-            res.status(500).json({ error: error.message });
-        }
-    });
-});
-
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK', model: 'facebook/detr-resnet-101', apiKeySet: !!HF_API_KEY });
 });
 
 // const PORT = process.env.PORT || 3000;
