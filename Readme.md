@@ -40,7 +40,7 @@ Ecoverse also delivers disposal guidelines, eco-friendly tips, and enables users
 | Tech            | Purpose                            |
 |-----------------|------------------------------------|
 | Node.js + Express | Backend server & API             |
-| React.js        | Frontend web interface             |
+| EJS Template    | Frontend web interface             |
 | Multer          | File upload handling               |
 | Axios           | API calls to model server          |
 | Canvas          | Image annotation and visualization |
