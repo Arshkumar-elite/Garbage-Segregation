@@ -318,9 +318,9 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', model: 'facebook/detr-resnet-101', apiKeySet: !!HF_API_KEY });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// });
 
-// module.exports = app
+module.exports = app
