@@ -245,7 +245,7 @@ app.post('/upload', (req, res) => {
         // Download the image from Supabase Storage
         const { data: fileData, error: downloadError } = await supabase.storage
             .from('annotated-images')
-            .download(metadata.filename);
+            .download([metadata.filename]);
 
         if (downloadError) {
             return res.status(500).send('Error downloading image');
