@@ -242,11 +242,10 @@ app.post('/upload', (req, res) => {
         if (fetchError || !metadata) {
             return res.status(404).send('Image not found');
         }
-
         // Download the image from Supabase Storage
         const { data: fileData, error: downloadError } = await supabase.storage
             .from('annotated-images')
-            .download(metadata.filename);
+            .download([metadata.filename]);
 
         if (downloadError) {
             return res.status(500).send('Error downloading image');
@@ -270,6 +269,9 @@ app.post('/upload', (req, res) => {
 
 
 app.post('/delete-image', async (req, res) => {
+
+    setTimeout(() => {}, 5000);
+
     const { imageId } = req.body;
     try {
         const { data: metadata, error: fetchError } = await supabase
@@ -318,9 +320,9 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', model: 'facebook/detr-resnet-101', apiKeySet: !!HF_API_KEY });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// });
 
-// module.exports = app
+module.exports = app
