@@ -242,7 +242,6 @@ app.post('/upload', (req, res) => {
         if (fetchError || !metadata) {
             return res.status(404).send('Image not found');
         }
-        console.log(metadata)
         // Download the image from Supabase Storage
         const { data: fileData, error: downloadError } = await supabase.storage
             .from('annotated-images')
@@ -270,6 +269,9 @@ app.post('/upload', (req, res) => {
 
 
 app.post('/delete-image', async (req, res) => {
+
+    setTimeout(() => {}, 5000);
+
     const { imageId } = req.body;
     try {
         const { data: metadata, error: fetchError } = await supabase
