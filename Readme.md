@@ -1,7 +1,5 @@
 # ♻ Ecoverse: Smart Waste Intelligence System
 
-![Vercel Deployment](https://garbage-segregation-wheat.vercel.app/)
-
 
 ---
 
