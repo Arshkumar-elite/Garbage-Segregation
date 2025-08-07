@@ -21,9 +21,11 @@
       <div class="mt-10 text-center bg-white p-4 rounded-lg shadow">
         <h2 class="text-xl font-semibold mb-4">Generated Image</h2>
         <img src="<%= imageUrl %>" alt="Annotated Image" class="mx-auto max-w-full rounded shadow mb-4">
-        <a href="<%= imageUrl %>" download class="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">Download Image</a>
+        <a href="/download/<%= imageId %>" class="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">Download Image</a>
       </div>
       <br>
+
+
 
       <!-- Cards -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
