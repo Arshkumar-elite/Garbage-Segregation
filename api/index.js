@@ -228,6 +228,47 @@ app.post('/upload', (req, res) => {
     });
 });
 
+
+   app.get('/download/:imageId', async (req, res) => {
+    const { imageId } = req.params;
+    try {
+        // Retrieve the filename from your image_metadata table
+        const { data: metadata, error: fetchError } = await supabase
+            .from('image_metadata')
+            .select('filename')
+            .eq('id', imageId)
+            .single();
+
+        if (fetchError || !metadata) {
+            return res.status(404).send('Image not found');
+        }
+
+        // Download the image from Supabase Storage
+        const { data: fileData, error: downloadError } = await supabase.storage
+            .from('annotated-images')
+            .download(metadata.filename);
+
+        if (downloadError) {
+            return res.status(500).send('Error downloading image');
+        }
+
+        // Convert Blob to Buffer for Node.js
+        const buffer = Buffer.from(await fileData.arrayBuffer());
+
+        // Force download by setting headers
+        res.setHeader('Content-Type', 'image/jpeg');
+        res.setHeader('Content-Disposition', `attachment; filename="${metadata.filename}"`);
+
+        res.send(buffer);
+    } catch (error) {
+        console.error('Error in /download:', error);
+        res.status(500).send('Server error during download');
+    }
+});
+
+
+
+
 app.post('/delete-image', async (req, res) => {
     const { imageId } = req.body;
     try {
